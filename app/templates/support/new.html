@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Support &middot; {{ store.store_name }}{% endblock %}
+
+{% block content %}
+  <h1>Open a support ticket</h1>
+
+  <div class="steps">
+    <span class="on">1. Describe the issue</span>
+    <span>2. Attach a file</span>
+  </div>
+
+  {% if error %}
+    <p class="notice">{{ error }}</p>
+  {% endif %}
+
+  <form class="stack" method="post" action="{{ url_for('support.new_ticket') }}">
+    <label>
+      Subject
+      <input type="text" id="subject" name="subject" value="{{ subject or '' }}" maxlength="120">
+    </label>
+    <label>
+      What happened?
+      <textarea id="body" name="body" rows="6">{{ body or '' }}</textarea>
+    </label>
+    <div>
+      <button type="submit">Create ticket</button>
+    </div>
+  </form>
+
+  <p class="muted">A member of the team replies to {{ store.support_email }} within one business day.</p>
+
+  {% if recent %}
+    <h2>Your recent tickets</h2>
+    <table>
+      <tr><th>Ticket</th><th>Subject</th><th>Opened</th></tr>
+      {% for item in recent %}
+        <tr>
+          <td><a href="{{ url_for('support.ticket', ticket_id=item['id']) }}">#{{ item['id'] }}</a></td>
+          <td>{{ item['subject'] }}</td>
+          <td class="muted">{{ item['opened_at'] }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+{% endblock %}

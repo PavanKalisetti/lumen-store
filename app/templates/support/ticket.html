@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Ticket #{{ ticket['id'] }} &middot; {{ store.store_name }}{% endblock %}
+
+{% block content %}
+  <h1>Ticket #{{ ticket['id'] }}</h1>
+
+  <div class="steps">
+    <span>1. Describe the issue</span>
+    <span class="on">2. Attach a file</span>
+  </div>
+
+  <div class="card">
+    <h3>{{ ticket['subject'] }}</h3>
+    <p class="byline">Opened {{ ticket['opened_at'] }}</p>
+    <p>{{ ticket['body'] }}</p>
+    {% if ticket['attachment'] %}
+      <span class="badge">{{ ticket['attachment'] }}</span>
+    {% endif %}
+  </div>
+
+  {% if upload_token %}
+    <h2>Attach a file</h2>
+    <form class="stack" method="post" enctype="multipart/form-data"
+          action="{{ url_for('support.add_attachment', ticket_id=ticket['id']) }}">
+      <input type="hidden" name="upload_token" value="{{ upload_token }}">
+      <label>
+        Receipt, photo or log
+        <input type="file" id="attachment" name="attachment">
+      </label>
+      <div>
+        <button type="submit">Upload</button>
+      </div>
+    </form>
+    <p class="muted">One file per ticket. Reply to {{ store.support_email }} to send more.</p>
+  {% else %}
+    <p class="notice">The upload slot for this ticket has been used.</p>
+  {% endif %}
+
+  {% if preview %}
+    <h2>Attached file</h2>
+    <pre class="card">{{ preview }}</pre>
+  {% endif %}
+{% endblock %}

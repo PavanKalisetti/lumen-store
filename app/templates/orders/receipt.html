@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Receipt {{ order.reference }} · {{ store.store_name }}{% endblock %}
+
+{% block content %}
+<h1>Receipt {{ order.reference }}</h1>
+
+<p class="muted">Placed {{ order.placed_at }} · <span class="badge">{{ order.status }}</span></p>
+
+<h2>Ship to</h2>
+<p>
+  {{ order.ship_name }}<br>
+  {{ order.ship_address }}
+</p>
+
+<h2>Items</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Qty</th>
+      <th>Unit</th>
+      <th>Line</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>${{ "%.2f"|format(item.unit_price_cents / 100) }}</td>
+        <td>${{ "%.2f"|format(item.quantity * item.unit_price_cents / 100) }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="totals">
+  <div class="row grand">
+    <span>Total paid</span>
+    <span>${{ "%.2f"|format(order.total_cents / 100) }}</span>
+  </div>
+</div>
+
+<h2>Fulfilment reference</h2>
+<p class="muted">{{ fulfilment_reference }}</p>
+{% endblock %}

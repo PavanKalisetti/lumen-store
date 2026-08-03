@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Review order · {{ store.store_name }}{% endblock %}
+{% block content %}
+  <div class="steps">
+    <span>1. Cart</span>
+    <span class="on">2. Review</span>
+    <span>3. Confirmation</span>
+  </div>
+
+  <h1>Review your order</h1>
+
+  {% if error %}
+    <p class="notice">{{ error }}</p>
+  {% endif %}
+
+  {% if not lines %}
+    <p class="notice">Your cart is empty, so there is nothing to review yet.</p>
+    <p><a href="{{ url_for('catalog.index') }}">Back to the shop</a></p>
+  {% else %}
+  <div class="card" data-salt="{{ salt }}">
+    <table>
+      <tr><th>Item</th><th>Qty</th><th>Unit</th></tr>
+      {% for line in lines %}
+        <tr data-line data-quantity="{{ line.quantity }}" data-unit="{{ line.unit_price_cents }}">
+          <td>{{ line.name }}</td>
+          <td>{{ line.quantity }}</td>
+          <td class="price">${{ '%.2f' % (line.unit_price_cents / 100) }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <div class="totals">
+      <div class="row grand">
+        <span>Amount due</span>
+        <span data-grand>&mdash;</span>
+      </div>
+    </div>
+
+    <form method="post" action="{{ url_for('checkout.confirm') }}">
+      <input type="hidden" name="total_cents" value="">
+      <input type="hidden" name="nonce" value="">
+      <button type="submit">Place order</button>
+    </form>
+  </div>
+  {% endif %}
+
+  <p><a href="{{ url_for('checkout.cart') }}">Back to cart</a></p>
+{% endblock %}
+{% block scripts %}
+  <script src="{{ url_for('static', filename='checkout.js') }}"></script>
+{% endblock %}

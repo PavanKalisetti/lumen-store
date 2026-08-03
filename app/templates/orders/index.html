@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Orders · {{ store.store_name }}{% endblock %}
+
+{% block content %}
+<h1>Your orders</h1>
+
+{% if orders %}
+  <table>
+    <thead>
+      <tr>
+        <th>Reference</th>
+        <th>Placed</th>
+        <th>Status</th>
+        <th>Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td>{{ order.reference }}</td>
+          <td>{{ order.placed_at }}</td>
+          <td><span class="badge">{{ order.status }}</span></td>
+          <td>${{ "%.2f"|format(order.total_cents / 100) }}</td>
+          <td>
+            <a href="{{ url_for('orders.receipt', reference=order.reference) }}">Receipt</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="muted">No orders yet. <a href="{{ url_for('catalog.index') }}">Browse the shop</a>.</p>
+{% endif %}
+{% endblock %}

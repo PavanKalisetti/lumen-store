@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Order {{ order.reference }} · {{ store.store_name }}{% endblock %}
+{% block content %}
+  <div class="steps">
+    <span>1. Cart</span>
+    <span>2. Review</span>
+    <span class="on">3. Confirmation</span>
+  </div>
+
+  <h1>Thank you, your order is placed</h1>
+
+  <p class="notice">
+    Reference <strong>{{ order.reference }}</strong>
+    <span class="badge">{{ order.status }}</span>
+  </p>
+
+  <table>
+    <tr><th>Item</th><th>Qty</th><th>Unit</th><th>Line</th></tr>
+    {% for line in lines %}
+      <tr>
+        <td>{{ line.name }}</td>
+        <td>{{ line.quantity }}</td>
+        <td class="price">${{ '%.2f' % (line.unit_price_cents / 100) }}</td>
+        <td class="price">${{ '%.2f' % (line.line_total_cents / 100) }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <div class="totals">
+    <div class="row">
+      <span>Items</span>
+      <span>${{ '%.2f' % (items_total / 100) }}</span>
+    </div>
+    <div class="row grand">
+      <span>Charged</span>
+      <span>${{ '%.2f' % (order.total_cents / 100) }}</span>
+    </div>
+  </div>
+
+  {% if settlement %}
+    <p class="muted">Settlement reference: {{ settlement }}</p>
+  {% endif %}
+
+  <p><a href="{{ url_for('orders.index') }}">All orders</a></p>
+{% endblock %}

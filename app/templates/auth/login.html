@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Sign in · {{ store.store_name }}{% endblock %}
+
+{% block content %}
+<h1>Sign in</h1>
+
+{% if error %}
+  <p class="notice">{{ error }}</p>
+{% endif %}
+
+<form class="stack" method="post" action="{{ url_for('auth.login') }}">
+  <input type="hidden" name="form_token" value="{{ token }}">
+  <label for="email">Email
+    <input id="email" name="email" type="email" value="{{ email }}" autocomplete="username" required>
+  </label>
+  <label for="password">Password
+    <input id="password" name="password" type="password" autocomplete="current-password" required>
+  </label>
+  <div>
+    <button type="submit">Sign in</button>
+  </div>
+</form>
+
+<p class="muted">Order history and support requests need an account. Email
+  {{ store.support_email }} if you cannot get in.</p>
+{% endblock %}

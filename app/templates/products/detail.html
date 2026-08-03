@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} · {{ store.store_name }}{% endblock %}
+
+{% block content %}
+  <h1>{{ product.name }}</h1>
+  <p class="price">{{ "$%.2f"|format(product.price_cents / 100) }}</p>
+  <p>{{ product.summary }}</p>
+  <p class="muted">{{ product.description }}</p>
+  <p><span class="badge">{{ product.stock }} in stock</span></p>
+
+  {% if session.get('user_id') %}
+    <form class="stack" method="post" action="{{ url_for('checkout.add') }}">
+      <input type="hidden" name="slug" value="{{ product.slug }}">
+      <label for="quantity">Quantity
+        <input id="quantity" name="quantity" type="number" value="1" min="1" max="10">
+      </label>
+      <div>
+        <button type="submit">Add to cart</button>
+      </div>
+    </form>
+  {% else %}
+    <p class="muted"><a href="{{ url_for('auth.login') }}">Sign in</a> to add this to your cart.</p>
+  {% endif %}
+
+  <h2>Reviews</h2>
+  <p class="muted" id="reviews-status">Loading reviews.</p>
+  <div id="reviews" data-slug="{{ product.slug }}"></div>
+
+  {% if session.get('user_id') %}
+    <h2>Write a review</h2>
+    <form class="stack" id="review-form">
+      <label>Name
+        <input name="author" value="{{ session.get('display_name', '') }}">
+      </label>
+      <label>Rating
+        <select name="rating">
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </label>
+      <label>Review
+        <textarea name="body" rows="4"></textarea>
+      </label>
+      <button type="submit">Post review</button>
+    </form>
+  {% else %}
+    <p class="muted"><a href="{{ url_for('auth.login') }}">Sign in</a> to write a review.</p>
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='reviews.js') }}"></script>
+{% endblock %}

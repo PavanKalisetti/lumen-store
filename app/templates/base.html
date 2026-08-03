@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ store.store_name }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body>
+  <header class="masthead">
+    <a class="wordmark" href="{{ url_for('catalog.index') }}">{{ store.store_name }}</a>
+    <nav>
+      <a href="{{ url_for('catalog.index') }}">Shop</a>
+      <a href="{{ url_for('checkout.cart') }}">Cart</a>
+      {% if session.get('user_id') %}
+        <a href="{{ url_for('orders.index') }}">Orders</a>
+        <a href="{{ url_for('support.new_ticket') }}">Support</a>
+        <a href="{{ url_for('auth.logout') }}">Sign out</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">Sign in</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <span>{{ store.store_name }}</span>
+    <span>{{ store.support_email }}</span>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

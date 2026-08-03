@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Cart · {{ store.store_name }}{% endblock %}
+{% block content %}
+  <div class="steps">
+    <span class="on">1. Cart</span>
+    <span>2. Review</span>
+    <span>3. Confirmation</span>
+  </div>
+
+  <h1>Your cart</h1>
+
+  {% if lines %}
+    <table>
+      <tr><th>Item</th><th>Qty</th><th>Unit</th><th>Line</th></tr>
+      {% for line in lines %}
+        <tr>
+          <td><a href="{{ url_for('products.detail', slug=line.slug) }}">{{ line.name }}</a></td>
+          <td>{{ line.quantity }}</td>
+          <td class="price">${{ '%.2f' % (line.unit_price_cents / 100) }}</td>
+          <td class="price">${{ '%.2f' % (line.line_total_cents / 100) }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <div class="totals">
+      <div class="row grand">
+        <span>Total</span>
+        <span>${{ '%.2f' % (total_cents / 100) }}</span>
+      </div>
+    </div>
+
+    <p><a href="{{ url_for('checkout.review') }}">Continue to review</a></p>
+  {% else %}
+    <p class="notice">Your cart is empty.</p>
+    <p><a href="{{ url_for('catalog.index') }}">Back to the shop</a></p>
+  {% endif %}
+{% endblock %}
