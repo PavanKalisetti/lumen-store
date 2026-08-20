@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Create account · {{ store.store_name }}{% endblock %}
+
+{% block content %}
+<h1>Create account</h1>
+
+{% if error %}
+  <p class="notice">{{ error }}</p>
+{% endif %}
+
+<form class="stack" method="post" action="{{ url_for('auth.register') }}">
+  <input type="hidden" name="form_token" value="{{ token }}">
+  <label for="display_name">Name
+    <input id="display_name" name="display_name" type="text" value="{{ display_name }}" autocomplete="name">
+  </label>
+  <label for="email">Email
+    <input id="email" name="email" type="email" value="{{ email }}" autocomplete="username" required>
+  </label>
+  <label for="password">Password
+    <input id="password" name="password" type="password" autocomplete="new-password" required>
+  </label>
+  <div>
+    <button type="submit">Create account</button>
+  </div>
+</form>
+
+<p class="muted">Already shop with us? <a href="{{ url_for('auth.login') }}">Sign in</a> instead.</p>
+{% endblock %}

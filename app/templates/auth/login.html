@@ -21,6 +21,7 @@
   </div>
 </form>
 
-<p class="muted">Order history and support requests need an account. Email
+<p class="muted">Order history and support requests need an account.
+  <a href="{{ url_for('auth.register') }}">Create one</a> or email
   {{ store.support_email }} if you cannot get in.</p>
 {% endblock %}
