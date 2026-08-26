@@ -19,7 +19,7 @@ KEYS = (
     "checkout",
 )
 
-DEFAULT_PATH = Path.home() / ".cache" / "lumen-store" / "markers.json"
+DEFAULT_PATH = Path(os.environ.get("LUMEN_STATE_DIR", "/tmp/lumen-store")) / "markers.json"
 
 _values: dict[str, str] = {}
 
